@@ -7,7 +7,10 @@ import (
 )
 
 const (
-	RegularPingTime = time.Second * 30
+	RegularWriteWait = time.Second * 10
+	RegularPongWait = time.Second * 60
+	RegularPingPeriod = (RegularPongWait * 9) / 10
+	RegularMaxMessageSize = 512
 )
 
 var (
