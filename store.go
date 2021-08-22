@@ -19,7 +19,9 @@ type Store interface {
 }
 
 func NewRuntimeStore() Store {
-	return RuntimeStore{}
+	return RuntimeStore {
+		Rooms: make(map[string]Room),
+	}
 }
 
 type RuntimeStore struct {
