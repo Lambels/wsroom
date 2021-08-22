@@ -18,6 +18,10 @@ type Store interface {
 	New(key string, pingPeriod, writeWait, pongWait time.Duration, maxMessageSize int64, unmarshalIn Message) (Room, error)
 }
 
+func NewRuntimeStore() Store {
+	return RuntimeStore{}
+}
+
 type RuntimeStore struct {
 	Rooms map[string]Room
 }
