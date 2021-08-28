@@ -52,7 +52,7 @@ func (s RuntimeStore) New(key string, pingPeriod, writeWait, pongWait time.Durat
 		return room, ErrRoomAlreadyExists
 	}
 
-	room := NewRoom(unmarshalIn, pingPeriod, writeWait, pongWait, maxMessageSize)
+	room := NewRoom(key, unmarshalIn, pingPeriod, writeWait, pongWait, maxMessageSize)
 	s.Rooms[key] = room
 
 	go room.listen()

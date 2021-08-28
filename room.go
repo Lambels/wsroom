@@ -18,8 +18,9 @@ var (
 	ErrConnNotFound = errors.New("connection not found")
 )
 
-func NewRoom(unmarshalIn Message, pingPeriod, writeWait, pongWait time.Duration, maxMessageSize int64) Room {
+func NewRoom(key string, unmarshalIn Message, pingPeriod, writeWait, pongWait time.Duration, maxMessageSize int64) Room {
 	return Room {
+		Key: 						key,	
 		Connections: 				make(map[string]Connection),
 		UnmarshalIn: 				unmarshalIn,
 		PingPeriod: 				pingPeriod,
@@ -37,6 +38,8 @@ func NewRoom(unmarshalIn Message, pingPeriod, writeWait, pongWait time.Duration,
 // Room -------------------------------------------------
 
 type Room struct {
+	Key				string
+
 	Connections 	map[string]Connection
 
 	UnmarshalIn		Message
@@ -60,8 +63,8 @@ func (r Room) Close() (error) {
 	return nil
 }
 
-func (r Room) Subscribe(key string, conn Connection) (error) {
-	if _, ok := r.Connections[key]; !ok {
+func (r Room) Subscribe(conn Connection) (error) {
+	if _, ok := r.Connections[conn.Key]; !ok {
 		return ErrConnAlreadyExists
 	}
 
