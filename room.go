@@ -64,7 +64,7 @@ func (r Room) Close() (error) {
 }
 
 func (r Room) Subscribe(conn Connection) (error) {
-	if _, ok := r.Connections[conn.Key]; !ok {
+	if _, ok := r.Connections[conn.Key]; ok {
 		return ErrConnAlreadyExists
 	}
 
