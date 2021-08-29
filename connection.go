@@ -16,7 +16,7 @@ type Connection struct {
 
 	Conn 	*websocket.Conn
 
-	Send	chan Message
+	Send	chan interface{}
 
 	room 	Room
 }
@@ -83,22 +83,9 @@ func (conn Connection) readPump() {
 // CommunicationChannels --------------------------------------------------
 
 type CommunicationChannels struct {
-	Broadcast		chan Message
+	Broadcast		chan interface{}
 
 	Register		chan Connection
 
 	UnRegiser		chan Connection
 }
-
-
-// Message ----------------------------------------------------------------
-
-type Message interface {
-	GetData() map[string]interface{}
-}
-
-type PlainMessage struct {
-	Data	map[string]interface{}		`json:"data"`
-}
-
-func (m PlainMessage) GetData() map[string]interface{} { return m.Data }

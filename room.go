@@ -18,17 +18,17 @@ var (
 	ErrConnNotFound = errors.New("connection not found")
 )
 
-func NewRoom(key string, unmarshalIn Message, pingPeriod, writeWait, pongWait time.Duration, maxMessageSize int64) Room {
+func NewRoom(key string, unmarshalIn interface{}, maxMessageSize int64) Room {
 	return Room {
 		Key: 						key,	
 		Connections: 				make(map[string]Connection),
 		UnmarshalIn: 				unmarshalIn,
-		PingPeriod: 				pingPeriod,
-		WriteWait: 					writeWait,
-		PongWait: 					pongWait,
+		PingPeriod: 				RegularPingPeriod,
+		WriteWait: 					RegularWriteWait,
+		PongWait: 					RegularPongWait,
 		MaxMessageSize: 			maxMessageSize,
 		CommunicationChannels: 		CommunicationChannels{
-			Broadcast: 		make(chan Message),
+			Broadcast: 		make(chan interface{}),
 			Register: 		make(chan Connection),
 			UnRegiser: 		make(chan Connection),
 		},
@@ -42,7 +42,7 @@ type Room struct {
 
 	Connections 	map[string]Connection
 
-	UnmarshalIn		Message
+	UnmarshalIn		interface{}
 
 	PingPeriod 		time.Duration
 
@@ -85,7 +85,7 @@ func (r Room) UnSubscribe(key string) (error) {
 	return nil
 }
 
-func (r Room) Broadcast(msg Message) {
+func (r Room) Broadcast(msg interface{}) {
 	for _, conn := range r.Connections {
 		select {
 		case conn.Send <- msg:

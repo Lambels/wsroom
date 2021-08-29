@@ -2,7 +2,6 @@ package wsroom
 
 import (
 	"errors"
-	"time"
 )
 
 var (
@@ -15,7 +14,7 @@ type Store interface {
 
 	Delete(key string) error
 
-	New(key string, pingPeriod, writeWait, pongWait time.Duration, maxMessageSize int64, unmarshalIn Message) (Room, error)
+	New(key string, maxMessageSize int64, messageStruct interface{}) (Room, error)
 }
 
 func NewRuntimeStore() Store {
@@ -23,6 +22,8 @@ func NewRuntimeStore() Store {
 		Rooms: make(map[string]Room),
 	}
 }
+
+// RuntimeStore ----------------------------------------------------------------
 
 type RuntimeStore struct {
 	Rooms map[string]Room
@@ -47,12 +48,12 @@ func (s RuntimeStore) Delete(key string) error {
 	return room.Close()
 }
 
-func (s RuntimeStore) New(key string, pingPeriod, writeWait, pongWait time.Duration, maxMessageSize int64, unmarshalIn Message) (Room, error) {
+func (s RuntimeStore) New(key string, maxMessageSize int64, unmarshalIn interface{}) (Room, error) {
 	if room, ok := s.Rooms[key]; ok {
 		return room, ErrRoomAlreadyExists
 	}
 
-	room := NewRoom(key, unmarshalIn, pingPeriod, writeWait, pongWait, maxMessageSize)
+	room := NewRoom(key, unmarshalIn, maxMessageSize)
 	s.Rooms[key] = room
 
 	go room.listen()
