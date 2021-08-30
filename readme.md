@@ -8,7 +8,7 @@
 A Golang library for managing websockets.
 This project is made as an side project and shouldnt be taken serious.
 
-[examples]:     https://github.com/Lambels/wsroom/_examples
+[examples]:     https://github.com/Lambels/wsroom/tree/master/_examples
 [examples_img]: https://img.shields.io/badge/Example-__example%2F-blueviolet?style=flat-square
 
 ## Installation
@@ -18,4 +18,4 @@ go get github.com/Lambels/wsroom
 ~~~
 
 ## [Examples](examples)
-* [Group Chat](https://github.com/Lambels/wsroom/_examples/room_chat)
+* [Group Chat](https://github.com/Lambels/wsroom/tree/master/_examples/room_chat)
