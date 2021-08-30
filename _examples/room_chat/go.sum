@@ -1,0 +1,16 @@
+github.com/Lambels/wsroom v0.0.0-20210822174729-94732942e554 h1:Arz3nA5Z0UiFEfMsQxGLTIX7Nfnd1qgDvAH/tGZpq8E=
+github.com/Lambels/wsroom v0.0.0-20210822174729-94732942e554/go.mod h1:BO7OYkU4vpAi8hIhmybrfCHQq1RySzIqsStKo2sd5KY=
+github.com/Lambels/wsroom v0.0.0-20210828053834-1fbca8a55677 h1:xnEn3g47ve0lz6W+i0WbrJj50pq66mb/EkV6LxOOnyA=
+github.com/Lambels/wsroom v0.0.0-20210828053834-1fbca8a55677/go.mod h1:BO7OYkU4vpAi8hIhmybrfCHQq1RySzIqsStKo2sd5KY=
+github.com/Lambels/wsroom v0.0.0-20210828054502-1e2f4fdeab33 h1:WuwHCSIhjTtKsn82APd1yuiprjbSDsYcnLiJw3t0EMc=
+github.com/Lambels/wsroom v0.0.0-20210828054502-1e2f4fdeab33/go.mod h1:BO7OYkU4vpAi8hIhmybrfCHQq1RySzIqsStKo2sd5KY=
+github.com/Lambels/wsroom v0.0.0-20210828152131-a83bd7c52be5 h1:QZnBMOV81bykgJpaDrJhZoU95iigaMegiTf8dLXF7Zc=
+github.com/Lambels/wsroom v0.0.0-20210828152131-a83bd7c52be5/go.mod h1:BO7OYkU4vpAi8hIhmybrfCHQq1RySzIqsStKo2sd5KY=
+github.com/Lambels/wsroom v0.0.0-20210829104639-6ec0c22ec27f h1:BYyyk7m8HSKvFA7aCDbO4hjxAPaNTbOLVzysExVC39k=
+github.com/Lambels/wsroom v0.0.0-20210829104639-6ec0c22ec27f/go.mod h1:BO7OYkU4vpAi8hIhmybrfCHQq1RySzIqsStKo2sd5KY=
+github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
+github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
+github.com/gorilla/websocket v1.4.2 h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0Ufc=
+github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
+github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
+github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
