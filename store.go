@@ -1,13 +1,17 @@
 package wsroom
 
 import (
+	"database/sql"
 	"errors"
+	"github.com/patrickmn/go-cache"
 )
 
 var (
 	ErrRoomNotFound = errors.New("room not found")
 	ErrRoomAlreadyExists = errors.New("room already exists")
 )
+
+// Store ----------------------------------------------------------------------
 
 type Store interface {
 	Get(key string) (Room, error)
@@ -17,13 +21,13 @@ type Store interface {
 	New(key string, maxMessageSize int64, messageStruct interface{}) (Room, error)
 }
 
+// RuntimeStore ----------------------------------------------------------------
+
 func NewRuntimeStore() Store {
-	return RuntimeStore {
+	return &RuntimeStore {
 		Rooms: make(map[string]Room),
 	}
 }
-
-// RuntimeStore ----------------------------------------------------------------
 
 type RuntimeStore struct {
 	Rooms map[string]Room
@@ -59,4 +63,25 @@ func (s RuntimeStore) New(key string, maxMessageSize int64, unmarshalIn interfac
 	go room.listen()
 
 	return room, nil
+}
+
+// MySqlStore ----------------------------------------------------------------
+
+func NewMySqlStore(dsn, tableName string) (Store, error) {
+	db, err := sql.Open("mysql", dsn)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err := db.Exec()
+}
+
+type MySqlStore struct {
+	Db					*sql.DB
+	tableName			string
+	roomCache			*cache.Cache
+
+	insertStmt			*sql.Stmt
+	deleteStmt			*sql.Stmt
+	selectStmt			*sql.Stmt
 }
