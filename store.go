@@ -3,6 +3,7 @@ package wsroom
 import (
 	"database/sql"
 	"errors"
+	"log"
 	"time"
 
 	"github.com/go-sql-driver/mysql"
@@ -99,6 +100,7 @@ func NewMySqlStore(dsn, tableName string) (Store, error) {
 
 	deleteStmt, err := db.Prepare(deleteQ)
 	if err != nil {
+		log.Println(deleteStmt)
 		return nil, err
 	}
 
