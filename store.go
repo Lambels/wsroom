@@ -3,7 +3,6 @@ package wsroom
 import (
 	"database/sql"
 	"errors"
-	"log"
 	"time"
 
 	"github.com/go-sql-driver/mysql"
@@ -93,8 +92,6 @@ func NewMySqlStore(dsn, tableName string) (Store, error) {
 
 	insertStmt, err := db.Prepare(insertQ)
 	if err != nil {
-		log.Println("Insert")
-		log.Println(insertStmt)
 		return nil, err
 	}
 
@@ -102,17 +99,13 @@ func NewMySqlStore(dsn, tableName string) (Store, error) {
 
 	deleteStmt, err := db.Prepare(deleteQ)
 	if err != nil {
-		log.Println("delete")
-		log.Println(deleteStmt)
 		return nil, err
 	}
 
-	selectQ := "SELECT * FROM " + tableName + "WHERE roomKey = ?"
+	selectQ := "SELECT * FROM " + tableName + " WHERE roomKey = ?"
 
 	selectStmt, err := db.Prepare(selectQ)
 	if err != nil {
-		log.Println("select")
-		log.Println(selectStmt)
 		return nil, err
 	}
 
