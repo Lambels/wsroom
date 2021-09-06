@@ -18,11 +18,10 @@ var (
 	ErrConnNotFound = errors.New("connection not found")
 )
 
-func NewRoom(key string, unmarshalIn interface{}, maxMessageSize int64) Room {
+func NewRoom(key string, maxMessageSize int64) Room {
 	return Room {
 		Key: 						key,	
 		Connections: 				make(map[string]Connection),
-		UnmarshalIn: 				unmarshalIn,
 		PingPeriod: 				RegularPingPeriod,
 		WriteWait: 					RegularWriteWait,
 		PongWait: 					RegularPongWait,
@@ -41,8 +40,6 @@ type Room struct {
 	Key				string
 
 	Connections 	map[string]Connection
-
-	UnmarshalIn		interface{}
 
 	PingPeriod 		time.Duration
 
