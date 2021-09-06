@@ -93,6 +93,7 @@ func NewMySqlStore(dsn, tableName string) (Store, error) {
 
 	insertStmt, err := db.Prepare(insertQ)
 	if err != nil {
+		log.Println(insertStmt)
 		return nil, err
 	}
 
@@ -108,6 +109,7 @@ func NewMySqlStore(dsn, tableName string) (Store, error) {
 
 	selectStmt, err := db.Prepare(selectQ)
 	if err != nil {
+		log.Println(selectStmt)
 		return nil, err
 	}
 
