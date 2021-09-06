@@ -67,7 +67,7 @@ func (conn Connection) readPump() {
 	conn.Conn.SetPongHandler(func(appData string) error { conn.Conn.SetReadDeadline(time.Now().Add(conn.room.PongWait)); return nil })
 	
 	for {
-		msg := conn.room.UnmarshalIn
+		var msg map[string]interface{}
 
 		err := conn.Conn.ReadJSON(&msg)
 		if err != nil {
