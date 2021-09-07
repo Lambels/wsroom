@@ -1,6 +1,7 @@
 package wsroom
 
 import (
+	"log"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -70,6 +71,7 @@ func (conn Connection) readPump() {
 		var msg map[string]interface{}
 
 		err := conn.Conn.ReadJSON(&msg)
+		log.Println(msg)
 		if err != nil {
 			break
 		}
