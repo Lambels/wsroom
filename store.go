@@ -78,9 +78,6 @@ func NewMySqlStore(dsn, tableName string) (Store, error) {
 
 	createTQ := "CREATE TABLE IF NOT EXISTS " +
 		tableName + " (roomKey VARCHAR(100) NOT NULL, " +
-		"ping_period INT, " +
-		"write_wait INT, " +
-		"pong_wait INT, " +
 		"max_message_size INT, PRIMARY KEY(`roomKey`))"
 
 	if _, err := db.Exec(createTQ); err != nil {		// If table already exits query is going to NOP
@@ -131,9 +128,6 @@ type MySqlStore struct {
 
 type roomColumn struct {
 	key				string
-	pingPeriod		time.Duration
-	writeWait		time.Duration
-	pongWait		time.Duration
 	maxMessageSize	int64
 }
 
