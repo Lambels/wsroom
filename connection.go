@@ -36,6 +36,7 @@ func (conn Connection) writePump() {
 	for {
 		select {
 		case msg, ok := <-conn.Send:
+			log.Println(msg)
 			conn.Conn.SetWriteDeadline(time.Now().Add(conn.room.WriteWait))
 
 			if !ok {
