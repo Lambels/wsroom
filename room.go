@@ -1,6 +1,7 @@
 package wsroom
 
 import (
+	"log"
 	"time"
 
 	"github.com/pkg/errors"
@@ -84,6 +85,7 @@ func (r Room) UnSubscribe(key string) (error) {
 
 func (r Room) Broadcast(msg interface{}) {
 	for _, conn := range r.Connections {
+		log.Println(msg)
 		select {
 		case conn.Send <- msg:
 		
