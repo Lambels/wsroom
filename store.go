@@ -86,7 +86,7 @@ func NewMySqlStore(dsn, tableName string) (Store, error) {
 	}
 
 	insertQ := "INSERT INTO " + tableName + 
-		" (roomKey, max_message_size) VALUES (?, ?, ?, ?, ?)"
+		" (roomKey, max_message_size) VALUES (?, ?)"
 
 	insertStmt, err := db.Prepare(insertQ)
 	if err != nil {
