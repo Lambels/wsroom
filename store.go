@@ -188,7 +188,7 @@ func (s *MySqlStore) New(key string, maxMessageSize int64) (Room, error) {
 		return res.(Room), ErrRoomAlreadyExists
 	}
 
-	_, err := s.insertStmt.Exec(key, RegularPingPeriod, RegularWriteWait, RegularPongWait, maxMessageSize)
+	_, err := s.insertStmt.Exec(key, maxMessageSize)
 	switch err.(type) {
 	case *mysql.MySQLError:
 		if err.(*mysql.MySQLError).Number == 1062 {
