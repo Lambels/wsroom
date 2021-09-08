@@ -183,6 +183,7 @@ func (s *MySqlStore) New(key string, maxMessageSize int64) (Room, error) {
 	var room Room
 
 	if room, exists := s.roomCache[key]; exists {
+		go room.listen()
 		return room, ErrRoomAlreadyExists
 	}
 
