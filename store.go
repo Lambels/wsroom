@@ -191,6 +191,7 @@ func (s *MySqlStore) New(key string, maxMessageSize int64) (Room, error) {
 	switch err.(type) {
 	case *mysql.MySQLError:
 		if err.(*mysql.MySQLError).Number == 1062 {
+			go room.listen()
 			return room, ErrRoomAlreadyExists
 		}
 		return room, err
