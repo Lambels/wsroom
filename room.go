@@ -98,7 +98,9 @@ func (r Room) Broadcast(msg interface{}) {
 }
 
 func (r Room) listen() {
+	log.Println("Entered for listen")
 	for {
+		log.Println("Entered for loop")
 		select {
 		case conn := <-r.CommunicationChannels.Register:
 			r.Connections[conn.Key] = conn
@@ -113,4 +115,5 @@ func (r Room) listen() {
 			r.Broadcast(msg)
 		}
 	}
+	log.Println("Hello")
 }
