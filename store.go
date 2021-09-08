@@ -134,30 +134,38 @@ type roomColumn struct {
 }
 
 func (s *MySqlStore) Get(key string) (Room, error) {
-	var column roomColumn
+	var col roomColumn
 	var room Room
 
 	if room, exists := s.roomCache[key]; exists {	// Check the cache for room
+		log.Println("Room found in chache", room)
 		return room, nil
 	}
 
-	res, err := s.selectStmt.Query(key)
+	rows, err := s.selectStmt.Query(key)
 	switch err {
 	case nil:
 
 	case sql.ErrNoRows:
+		log.Panicln("Room not found")
 		return room, ErrRoomNotFound
 
 	default:
+		log.Println("Get err", err)
 		return room, err
 	}
 
-	err = res.Scan(&column)
-	if err != nil {
-		return room, err
+	for rows.Next() {
+		if err := rows.Scan(&col.key, &col.maxMessageSize); err != nil {
+			return room, err
+		}
+		
+		if err = rows.Err(); err != nil {
+			return room, err
+		}
 	}
 
-	r := NewRoom(key, column.maxMessageSize)
+	r := NewRoom(key, col.maxMessageSize)
 
 	s.roomCache[key] = r
 
