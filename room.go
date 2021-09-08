@@ -104,14 +104,16 @@ func (r Room) listen() {
 		select {
 		case conn := <-r.CommunicationChannels.Register:
 			r.Connections[conn.Key] = conn
-			log.Println(r.Connections)
+			log.Println("register")
 			conn.listen()
 
 		case conn := <-r.CommunicationChannels.UnRegiser:
 			delete(r.Connections, conn.Key)
+			log.Println("unregister")
 			close(conn.Send)
 		
 		case msg := <-r.CommunicationChannels.Broadcast:
+			log.Println("broadcast")
 			r.Broadcast(msg)
 		}
 	}
