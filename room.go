@@ -101,6 +101,7 @@ func (r Room) listen() {
 		select {
 		case conn := <-r.CommunicationChannels.Register:
 			r.Connections[conn.Key] = conn
+			log.Println(r.Connections)
 			conn.listen()
 
 		case conn := <-r.CommunicationChannels.UnRegiser:
