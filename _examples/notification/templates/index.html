@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href="/create_notifiaction">Send notification</a>
+    <script>
+        var ws;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            ws = new WebSocket("ws://localhost:8080/notifications/ws");
+
+            ws.onopen = () => {
+                console.log("Connected");
+            }
+
+            ws.onclose = () => {
+                console.log("Disconnected");
+            }
+
+            ws.onmessage = (msg) => {
+                console.log("a");
+            }
+
+            ws.onerror = (err) => {
+                console.error("Error:", err);
+            }
+        })
+    </script>
+</body>
+</html>
