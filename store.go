@@ -159,7 +159,7 @@ func (s *MySqlStore) Get(key string) (Room, error) {
 		if err := rows.Scan(&col.key, &col.maxMessageSize); err != nil {
 			return room, err
 		}
-		
+
 		if err = rows.Err(); err != nil {
 			return room, err
 		}
@@ -199,7 +199,9 @@ func (s *MySqlStore) New(key string, maxMessageSize int64) (Room, error) {
 	switch err.(type) {
 	case *mysql.MySQLError:
 		if err.(*mysql.MySQLError).Number == 1062 {
+			room = NewRoom(key, maxMessageSize)
 			go room.listen()
+			
 			return room, ErrRoomAlreadyExists
 		}
 		return room, err
