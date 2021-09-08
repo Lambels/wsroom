@@ -201,6 +201,7 @@ func (s *MySqlStore) New(key string, maxMessageSize int64) (Room, error) {
 	}
 
 	room = NewRoom(key, maxMessageSize)
+	log.Println(room)
 
 	s.roomCache[key] = room
 
