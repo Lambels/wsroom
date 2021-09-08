@@ -84,8 +84,8 @@ func (r Room) UnSubscribe(key string) (error) {
 }
 
 func (r Room) Broadcast(msg interface{}) {
+	log.Println(r.Connections)
 	for _, conn := range r.Connections {
-		log.Println(msg)
 		select {
 		case conn.Send <- msg:
 		
