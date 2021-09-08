@@ -18,7 +18,7 @@ type Connection struct {
 
 	Send	chan interface{}
 
-	room 	Room
+	room 	*Room
 }
 
 func (conn Connection) listen() {
