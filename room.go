@@ -68,6 +68,7 @@ func (r Room) Subscribe(conn Connection) (error) {
 
 	conn.room = r
 
+	log.Println(conn)
 	r.CommunicationChannels.Register <- conn
 	return nil
 }
