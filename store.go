@@ -4,10 +4,8 @@ import (
 	"database/sql"
 	"errors"
 	"log"
-	"time"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/patrickmn/go-cache"
 )
 
 var (
@@ -112,7 +110,7 @@ func NewMySqlStore(dsn, tableName string) (Store, error) {
 
 	return &MySqlStore {
 		Db: 				db,
-		roomCache: 			cache.New(time.Minute * 5, time.Minute * 10),
+		roomCache: 			make(map[string]Room),
 
 		insertStmt: 		insertStmt,
 		deleteStmt: 		deleteStmt,
@@ -123,7 +121,7 @@ func NewMySqlStore(dsn, tableName string) (Store, error) {
 
 type MySqlStore struct {
 	Db					*sql.DB
-	roomCache			*cache.Cache
+	roomCache			map[string]Room
 
 	insertStmt			*sql.Stmt
 	deleteStmt			*sql.Stmt
@@ -139,8 +137,8 @@ func (s *MySqlStore) Get(key string) (Room, error) {
 	var column roomColumn
 	var room Room
 
-	if res, exists := s.roomCache.Get(key); exists {	// Check the cache for room
-		return res.(Room), nil
+	if room, exists := s.roomCache[key]; exists {	// Check the cache for room
+		return room, nil
 	}
 
 	res, err := s.selectStmt.Query(key)
@@ -161,7 +159,7 @@ func (s *MySqlStore) Get(key string) (Room, error) {
 
 	r := NewRoom(key, column.maxMessageSize)
 
-	s.roomCache.Set(key, r, cache.NoExpiration)
+	s.roomCache[key] = r
 
 	return r, nil
 }
@@ -169,8 +167,8 @@ func (s *MySqlStore) Get(key string) (Room, error) {
 func (s *MySqlStore) Delete(key string) error {
 	var closeErr 	error
 
-	if res, exists := s.roomCache.Get(key); exists {
-		closeErr = res.(Room).Close()
+	if room, exists := s.roomCache[key]; exists {
+		closeErr = room.Close()
 	}
 
 	_, err := s.deleteStmt.Exec(key)
@@ -184,8 +182,8 @@ func (s *MySqlStore) Delete(key string) error {
 func (s *MySqlStore) New(key string, maxMessageSize int64) (Room, error) {
 	var room Room
 
-	if res, exists := s.roomCache.Get(key); exists {
-		return res.(Room), ErrRoomAlreadyExists
+	if room, exists := s.roomCache[key]; exists {
+		return room, ErrRoomAlreadyExists
 	}
 
 	_, err := s.insertStmt.Exec(key, maxMessageSize)
@@ -203,8 +201,10 @@ func (s *MySqlStore) New(key string, maxMessageSize int64) (Room, error) {
 	}
 
 	room = NewRoom(key, maxMessageSize)
+
+	s.roomCache[key] = room
+
 	go room.listen()
-	s.roomCache.Set(key, room, cache.NoExpiration)
 
 	return room, nil
 }
