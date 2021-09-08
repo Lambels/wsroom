@@ -19,8 +19,8 @@ var (
 	ErrConnNotFound = errors.New("connection not found")
 )
 
-func NewRoom(key string, maxMessageSize int64) *Room {
-	return &Room {
+func NewRoom(key string, maxMessageSize int64) Room {
+	return Room {
 		Key: 						key,	
 		Connections: 				make(map[string]Connection),
 		PingPeriod: 				RegularPingPeriod,
@@ -53,7 +53,7 @@ type Room struct {
 	CommunicationChannels
 }
 
-func (r *Room) Close() (error) {
+func (r Room) Close() (error) {
 	for _, conn := range r.Connections {
 		close(conn.Send)
 	}
@@ -61,7 +61,7 @@ func (r *Room) Close() (error) {
 	return nil
 }
 
-func (r *Room) Subscribe(conn Connection) (error) {
+func (r Room) Subscribe(conn Connection) (error) {
 	if _, ok := r.Connections[conn.Key]; ok {
 		return ErrConnAlreadyExists
 	}
@@ -72,7 +72,7 @@ func (r *Room) Subscribe(conn Connection) (error) {
 	return nil
 }
 
-func (r *Room) UnSubscribe(key string) (error) {
+func (r Room) UnSubscribe(key string) (error) {
 	conn, ok := r.Connections[key]
 	if !ok {
 		return ErrConnNotFound
@@ -83,7 +83,7 @@ func (r *Room) UnSubscribe(key string) (error) {
 	return nil
 }
 
-func (r *Room) Broadcast(msg interface{}) {
+func (r Room) Broadcast(msg interface{}) {
 	for _, conn := range r.Connections {
 		log.Println(msg)
 		select {
@@ -96,7 +96,7 @@ func (r *Room) Broadcast(msg interface{}) {
 	}
 }
 
-func (r *Room) listen() {
+func (r Room) listen() {
 	for {
 		select {
 		case conn := <-r.CommunicationChannels.Register:

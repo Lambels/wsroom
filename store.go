@@ -18,26 +18,26 @@ var (
 // Store ----------------------------------------------------------------------
 
 type Store interface {
-	Get(key string) (*Room, error)
+	Get(key string) (Room, error)
 
 	Delete(key string) error
 
-	New(key string, maxMessageSize int64) (*Room, error)
+	New(key string, maxMessageSize int64) (Room, error)
 }
 
 // RuntimeStore ----------------------------------------------------------------
 
 func NewRuntimeStore() Store {
 	return &RuntimeStore {
-		Rooms: make(map[string]*Room),
+		Rooms: make(map[string]Room),
 	}
 }
 
 type RuntimeStore struct {
-	Rooms map[string]*Room
+	Rooms map[string]Room
 }
 
-func (s *RuntimeStore) Get(key string) (*Room, error) {
+func (s *RuntimeStore) Get(key string) (Room, error) {
 	room, ok := s.Rooms[key]
 	if !ok {
 		return room, ErrRoomNotFound
@@ -56,7 +56,7 @@ func (s *RuntimeStore) Delete(key string) error {
 	return room.Close()
 }
 
-func (s *RuntimeStore) New(key string, maxMessageSize int64) (*Room, error) {
+func (s *RuntimeStore) New(key string, maxMessageSize int64) (Room, error) {
 	if room, ok := s.Rooms[key]; ok {
 		return room, ErrRoomAlreadyExists
 	}
@@ -135,12 +135,12 @@ type roomColumn struct {
 	maxMessageSize	int64
 }
 
-func (s *MySqlStore) Get(key string) (*Room, error) {
+func (s *MySqlStore) Get(key string) (Room, error) {
 	var column roomColumn
-	var room *Room
+	var room Room
 
 	if res, exists := s.roomCache.Get(key); exists {	// Check the cache for room
-		return res.(*Room), nil
+		return res.(Room), nil
 	}
 
 	res, err := s.selectStmt.Query(key)
@@ -170,7 +170,7 @@ func (s *MySqlStore) Delete(key string) error {
 	var closeErr 	error
 
 	if res, exists := s.roomCache.Get(key); exists {
-		closeErr = res.(*Room).Close()
+		closeErr = res.(Room).Close()
 	}
 
 	_, err := s.deleteStmt.Exec(key)
@@ -181,11 +181,11 @@ func (s *MySqlStore) Delete(key string) error {
 	return closeErr
 }
 
-func (s *MySqlStore) New(key string, maxMessageSize int64) (*Room, error) {
-	var room *Room
+func (s *MySqlStore) New(key string, maxMessageSize int64) (Room, error) {
+	var room Room
 
 	if res, exists := s.roomCache.Get(key); exists {
-		return res.(*Room), ErrRoomAlreadyExists
+		return res.(Room), ErrRoomAlreadyExists
 	}
 
 	_, err := s.insertStmt.Exec(key, maxMessageSize)
