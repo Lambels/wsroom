@@ -99,6 +99,7 @@ func (r Room) Broadcast(msg interface{}) {
 
 func (r Room) listen() {
 	log.Println("Entered for listen")
+	log.Println("On channels", r.CommunicationChannels)
 	for {
 		log.Println("Entered for loop")
 		select {
