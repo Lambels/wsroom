@@ -188,9 +188,11 @@ func (s *MySqlStore) Delete(key string) error {
 }
 
 func (s *MySqlStore) New(key string, maxMessageSize int64) (Room, error) {
+	log.Println("New room running")
 	var room Room
 
 	if room, exists := s.roomCache[key]; exists {
+		log.Println("New room found in cache")
 		go room.listen()
 		return room, ErrRoomAlreadyExists
 	}
@@ -199,6 +201,7 @@ func (s *MySqlStore) New(key string, maxMessageSize int64) (Room, error) {
 	switch err.(type) {
 	case *mysql.MySQLError:
 		if err.(*mysql.MySQLError).Number == 1062 {
+			log.Println("Found in database room")
 			room = NewRoom(key, maxMessageSize)
 			go room.listen()
 			
@@ -213,7 +216,7 @@ func (s *MySqlStore) New(key string, maxMessageSize int64) (Room, error) {
 	}
 
 	room = NewRoom(key, maxMessageSize)
-	log.Println(room)
+	log.Println("Havnt found in database room")
 
 	s.roomCache[key] = room
 
