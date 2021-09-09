@@ -138,7 +138,7 @@ func (s *MySqlStore) Get(key string) (Room, error) {
 	var room Room
 
 	if room, exists := s.roomCache[key]; exists {	// Check the cache for room
-		log.Println("Room found in chache", room)
+		log.Println("Room found in chache", "room name:", room.Key, "room connections:", room.Connections, "room channels:", room.CommunicationChannels)
 		return room, nil
 	}
 
