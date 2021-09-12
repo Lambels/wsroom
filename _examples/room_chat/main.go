@@ -20,11 +20,6 @@ func init() {
 	tpl = template.Must(template.ParseGlob("./templates/*.html"))
 }
 
-// the message structure which will be used for unmarshaling json
-type message struct {
-	Data	map[string]interface{}	`json:"data"`
-}
-
 func main() {
 	http.HandleFunc("/room/create", CreateRoom)
 	http.HandleFunc("/ws", ConnectWS)
@@ -39,7 +34,7 @@ func CreateRoom(w http.ResponseWriter, r *http.Request) {
 		roomKey := r.FormValue("roomKey")
 		
 		// create a new room with the given roomKey and setting the message structure for this room
-		_, err := store.New(roomKey, wsroom.RegularMaxMessageSize, message{})
+		_, err := store.New(roomKey, wsroom.RegularMaxMessageSize)
 		// room already exists?
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -8,9 +8,15 @@ github.com/Lambels/wsroom v0.0.0-20210828152131-a83bd7c52be5 h1:QZnBMOV81bykgJpa
 github.com/Lambels/wsroom v0.0.0-20210828152131-a83bd7c52be5/go.mod h1:BO7OYkU4vpAi8hIhmybrfCHQq1RySzIqsStKo2sd5KY=
 github.com/Lambels/wsroom v0.0.0-20210829104639-6ec0c22ec27f h1:BYyyk7m8HSKvFA7aCDbO4hjxAPaNTbOLVzysExVC39k=
 github.com/Lambels/wsroom v0.0.0-20210829104639-6ec0c22ec27f/go.mod h1:BO7OYkU4vpAi8hIhmybrfCHQq1RySzIqsStKo2sd5KY=
+github.com/Lambels/wsroom v1.0.1-0.20210912072130-aa5aa0e2306a h1:u8e6lY70qW8L3YJt8CBkYsnatLc5U/kiSZS9rSQElbs=
+github.com/Lambels/wsroom v1.0.1-0.20210912072130-aa5aa0e2306a/go.mod h1:+L+vheXhzD+j/AaGcPZrlD7XZY/HWxva2jSw8CqPEIc=
+github.com/Lambels/wsroom v1.0.1-0.20210912082529-dd8822c9be04 h1:q8cyf2i4v0r4/a5oRWigZ1avwaMa2svnuTrx+BKA2oc=
+github.com/Lambels/wsroom v1.0.1-0.20210912082529-dd8822c9be04/go.mod h1:+L+vheXhzD+j/AaGcPZrlD7XZY/HWxva2jSw8CqPEIc=
+github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
 github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
 github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/gorilla/websocket v1.4.2 h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0Ufc=
 github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
+github.com/patrickmn/go-cache v2.1.0+incompatible/go.mod h1:3Qf8kWWT7OJRJbdiICTKqZju1ZixQ/KpMGzzAfe6+WQ=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
