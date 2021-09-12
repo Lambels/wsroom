@@ -121,5 +121,4 @@ func (r Room) listen() {
 			r.Broadcast(msg)
 		}
 	}
-	log.Println("Hello")
 }
