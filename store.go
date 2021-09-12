@@ -62,8 +62,6 @@ func (s *RuntimeStore) New(key string, maxMessageSize int64) (Room, error) {
 	room := NewRoom(key, maxMessageSize)
 	s.Rooms[key] = room
 
-	go room.listen()
-
 	return room, nil
 }
 
@@ -166,7 +164,6 @@ func (s *MySqlStore) Get(key string) (Room, error) {
 	}
 
 	r := NewRoom(key, col.maxMessageSize)
-	go r.listen()
 
 	s.roomCache[key] = r
 
@@ -194,7 +191,6 @@ func (s *MySqlStore) New(key string, maxMessageSize int64) (Room, error) {
 
 	if room, exists := s.roomCache[key]; exists {
 		log.Println("New room found in cache")
-		go room.listen()
 		return room, ErrRoomAlreadyExists
 	}
 
@@ -206,8 +202,6 @@ func (s *MySqlStore) New(key string, maxMessageSize int64) (Room, error) {
 			room = NewRoom(key, maxMessageSize)
 
 			s.roomCache[key] = room
-
-			go room.listen()
 			
 			return room, ErrRoomAlreadyExists
 		}
@@ -223,8 +217,6 @@ func (s *MySqlStore) New(key string, maxMessageSize int64) (Room, error) {
 	log.Println("Havnt found in database room")
 
 	s.roomCache[key] = room
-
-	go room.listen()
 
 	return room, nil
 }

@@ -20,7 +20,7 @@ var (
 )
 
 func NewRoom(key string, maxMessageSize int64) Room {
-	return Room {
+	r := Room {
 		Key: 						key,	
 		Connections: 				make(map[string]Connection),
 		PingPeriod: 				RegularPingPeriod,
@@ -33,6 +33,9 @@ func NewRoom(key string, maxMessageSize int64) Room {
 			UnRegiser: 		make(chan Connection),
 		},
 	}
+	go r.listen()
+
+	return r
 }
 
 // Room -------------------------------------------------
