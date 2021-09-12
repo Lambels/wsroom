@@ -71,7 +71,6 @@ func (r Room) Subscribe(conn Connection) (error) {
 
 	conn.room = r
 
-	log.Println(conn)
 	r.CommunicationChannels.Register <- conn
 	return nil
 }
@@ -88,7 +87,6 @@ func (r Room) UnSubscribe(key string) (error) {
 }
 
 func (r Room) Broadcast(msg interface{}) {
-	log.Println(r.Connections)
 	for _, conn := range r.Connections {
 		select {
 		case conn.Send <- msg:
@@ -101,23 +99,17 @@ func (r Room) Broadcast(msg interface{}) {
 }
 
 func (r Room) listen() {
-	log.Println("Entered for listen")
-	log.Println("On channels", r.CommunicationChannels)
 	for {
-		log.Println("Entered for loop")
 		select {
 		case conn := <-r.CommunicationChannels.Register:
 			r.Connections[conn.Key] = conn
-			log.Println("register")
 			conn.listen()
 
 		case conn := <-r.CommunicationChannels.UnRegiser:
 			delete(r.Connections, conn.Key)
-			log.Println("unregister")
 			close(conn.Send)
 		
 		case msg := <-r.CommunicationChannels.Broadcast:
-			log.Println("broadcast")
 			r.Broadcast(msg)
 		}
 	}

@@ -1,7 +1,6 @@
 package wsroom
 
 import (
-	"log"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -36,7 +35,6 @@ func (conn Connection) writePump() {
 	for {
 		select {
 		case msg, ok := <-conn.Send:
-			log.Println(msg)
 			conn.Conn.SetWriteDeadline(time.Now().Add(conn.room.WriteWait))
 
 			if !ok {
@@ -72,7 +70,6 @@ func (conn Connection) readPump() {
 		var msg map[string]interface{}
 
 		err := conn.Conn.ReadJSON(&msg)
-		log.Println(msg)
 		if err != nil {
 			break
 		}
