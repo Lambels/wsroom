@@ -1,7 +1,6 @@
 package wsroom
 
 import (
-	"log"
 	"time"
 
 	"github.com/pkg/errors"
