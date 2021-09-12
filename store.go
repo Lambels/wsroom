@@ -204,6 +204,9 @@ func (s *MySqlStore) New(key string, maxMessageSize int64) (Room, error) {
 		if err.(*mysql.MySQLError).Number == 1062 {
 			log.Println("Found in database room")
 			room = NewRoom(key, maxMessageSize)
+
+			s.roomCache[key] = room
+
 			go room.listen()
 			
 			return room, ErrRoomAlreadyExists
