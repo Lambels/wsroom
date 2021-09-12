@@ -166,6 +166,7 @@ func (s *MySqlStore) Get(key string) (Room, error) {
 	}
 
 	r := NewRoom(key, col.maxMessageSize)
+	go r.listen()
 
 	s.roomCache[key] = r
 
