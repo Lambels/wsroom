@@ -12,7 +12,7 @@ import (
 
 var (
 	tpl 		*template.Template
-	store 		wsroom.Store
+	store = wsroom.NewRuntimeStore()
 	upgrader = websocket.Upgrader{}
 )
 
@@ -21,22 +21,9 @@ func init() {
 }
 
 func main() {
-	var err error
 
-	store, err = wsroom.NewMySqlStore("root:@tcp(localhost:3306)/wsroomtesting", "wsroom")
+	_, err := store.New("notifications", wsroom.RegularMaxMessageSize)
 	if err != nil {
-		log.Fatal(err)
-	}
-
-	room, err := store.New("notifications", 256)
-	log.Println(room)
-	switch err {
-	case nil:
-
-	case wsroom.ErrRoomAlreadyExists:
-		log.Println("room already exists store")
-
-	default:
 		log.Fatal(err)
 	}
 
@@ -49,21 +36,19 @@ func main() {
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	notRoom, _ := store.Get("notifications")
-	tpl.ExecuteTemplate(w, "index.html", notRoom)
+	tpl.ExecuteTemplate(w, "index.html", nil)
 }
 
 func createNotification(w http.ResponseWriter, r *http.Request) {
-	log.Println("createNotication")
 	msg := map[string]interface{} {"foo": "bar"}
 
-	notRoom, err := store.Get("notifications")
+	room, err := store.Get("notifications")
 	if err != nil {
-		log.Panicln(err)
+		log.Println(err)
+		return
 	}
 
-	notRoom.CommunicationChannels.Broadcast <- msg
-	log.Println("ended", notRoom, msg)
+	room.CommunicationChannels.Broadcast <- msg
 }
 
 func connectWS(w http.ResponseWriter, r *http.Request) {
@@ -80,9 +65,13 @@ func connectWS(w http.ResponseWriter, r *http.Request) {
 		Send: 	make(chan interface{}),
 	}
 
-	notRoom, _ := store.Get("notifications")
+	room, err := store.Get("notifications")
+	if err != nil {
+		log.Println(err)
+		return
+	}
 
-	err = notRoom.Subscribe(conn)
+	err = room.Subscribe(conn)
 	if err != nil {
 		log.Println(err)
 		ws.WriteMessage(websocket.CloseMessage, []byte(err.Error()))
