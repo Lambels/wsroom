@@ -19,3 +19,4 @@ go get github.com/Lambels/wsroom
 
 ## [Examples](https://github.com/Lambels/wsroom/tree/master/_examples/room_chat)
 * [Group Chat](https://github.com/Lambels/wsroom/tree/master/_examples/room_chat)
+* [Notifications](https://github.com/Lambels/wsroom/tree/master/_examples/notification)
