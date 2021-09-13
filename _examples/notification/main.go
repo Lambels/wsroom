@@ -12,16 +12,17 @@ import (
 
 var (
 	tpl 		*template.Template
-	store = wsroom.NewRuntimeStore()
+	store = wsroom.NewRuntimeStore() // Create our room store
 	upgrader = websocket.Upgrader{}
 )
 
+// parse templates
 func init() {
 	tpl = template.Must(template.ParseGlob("./templates/*.html"))
 }
 
 func main() {
-
+	// create the notifications room
 	_, err := store.New("notifications", wsroom.RegularMaxMessageSize)
 	if err != nil {
 		log.Fatal(err)
@@ -42,12 +43,14 @@ func index(w http.ResponseWriter, r *http.Request) {
 func createNotification(w http.ResponseWriter, r *http.Request) {
 	msg := map[string]interface{} {"foo": "bar"}
 
+	// Get the notifications room
 	room, err := store.Get("notifications")
 	if err != nil {
-		log.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
+	// send the msg (notification) to the rooms Broadcast channel
 	room.CommunicationChannels.Broadcast <- msg
 }
 
@@ -58,6 +61,8 @@ func connectWS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// create a connection
+	// each connection in a room must have an unique Key attribute
 	conn := wsroom.Connection {
 		Key:	uuid.NewString(),
 		Data: 	make(map[interface{}]interface{}),
@@ -67,13 +72,15 @@ func connectWS(w http.ResponseWriter, r *http.Request) {
 
 	room, err := store.Get("notifications")
 	if err != nil {
-		log.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
+	// subscribe the connection to the room
 	err = room.Subscribe(conn)
+	//! after upgrading the connection to a ws one the response writer gets hijaked by the upgrader
+	//! so we can write to it anymore, any error will be written through the websocket connection
 	if err != nil {
-		log.Println(err)
 		ws.WriteMessage(websocket.CloseMessage, []byte(err.Error()))
 	}
 }

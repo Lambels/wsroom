@@ -2,6 +2,7 @@ package main
 
 import (
 	"html/template"
+	"log"
 	"net/http"
 
 	"github.com/Lambels/wsroom"
@@ -26,14 +27,14 @@ func main() {
 	http.HandleFunc("/room/join", RenderRoom)
 	http.HandleFunc("/favicon.ico", http.NotFound)
 
-	http.ListenAndServe(":8080", nil)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 func CreateRoom(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		roomKey := r.FormValue("roomKey")
 		
-		// create a new room with the given roomKey and setting the message structure for this room
+		// create a new room with the given roomKey
 		_, err := store.New(roomKey, wsroom.RegularMaxMessageSize)
 		// room already exists?
 		if err != nil {
