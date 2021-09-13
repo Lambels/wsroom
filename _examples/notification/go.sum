@@ -64,6 +64,8 @@ github.com/Lambels/wsroom v1.0.1-0.20210912071449-7b84c1bfb7a7 h1:lFz+nmoFcaO3GY
 github.com/Lambels/wsroom v1.0.1-0.20210912071449-7b84c1bfb7a7/go.mod h1:+L+vheXhzD+j/AaGcPZrlD7XZY/HWxva2jSw8CqPEIc=
 github.com/Lambels/wsroom v1.0.1-0.20210912082529-dd8822c9be04 h1:q8cyf2i4v0r4/a5oRWigZ1avwaMa2svnuTrx+BKA2oc=
 github.com/Lambels/wsroom v1.0.1-0.20210912082529-dd8822c9be04/go.mod h1:+L+vheXhzD+j/AaGcPZrlD7XZY/HWxva2jSw8CqPEIc=
+github.com/Lambels/wsroom v1.0.1-0.20210913144123-c1d8e113d063 h1:Z/wk0vNeCY1ATPgxIexVBD/Q0knIQrwz2Xcdfwgzg+g=
+github.com/Lambels/wsroom v1.0.1-0.20210913144123-c1d8e113d063/go.mod h1:+L+vheXhzD+j/AaGcPZrlD7XZY/HWxva2jSw8CqPEIc=
 github.com/go-sql-driver/mysql v1.6.0 h1:BCTh4TKNUYmOmMUcQ3IipzF5prigylS7XXjEkfCHuOE=
 github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
 github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
