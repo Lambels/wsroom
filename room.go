@@ -18,6 +18,9 @@ var (
 	ErrConnNotFound = errors.New("connection not found")
 )
 
+// NewRoom is a helper function to create a Room using the default values.
+//
+// Starts listening on the room
 func NewRoom(key string, maxMessageSize int64) Room {
 	r := Room {
 		Key: 						key,	
@@ -40,21 +43,29 @@ func NewRoom(key string, maxMessageSize int64) Room {
 // Room -------------------------------------------------
 
 type Room struct {
+	// Primary key used to identify each room in a store
 	Key				string
 
+	// The active connections belonging to the room
 	Connections 	map[string]Connection
 
+	// The time between each ping message
 	PingPeriod 		time.Duration
 
+	// The time allowed to write a message to the room
 	WriteWait		time.Duration
 
+	// The time allowed to read the next pong message
 	PongWait		time.Duration
 
+	// Maximum message size allowed
 	MaxMessageSize	int64
 
+	// The communication channels of the room
 	CommunicationChannels
 }
 
+// Close closes all the live connections to the room 
 func (r Room) Close() (error) {
 	for _, conn := range r.Connections {
 		close(conn.Send)
@@ -63,6 +74,7 @@ func (r Room) Close() (error) {
 	return nil
 }
 
+// Subscribe registers conn to the room called upon
 func (r Room) Subscribe(conn Connection) (error) {
 	if _, ok := r.Connections[conn.Key]; ok {
 		return ErrConnAlreadyExists
@@ -74,17 +86,19 @@ func (r Room) Subscribe(conn Connection) (error) {
 	return nil
 }
 
+// Unsubscribe unregisters a connection to the room called upon
 func (r Room) UnSubscribe(key string) (error) {
 	conn, ok := r.Connections[key]
 	if !ok {
 		return ErrConnNotFound
 	}
-	close(conn.Send)
 
-	delete(r.Connections, key)
+	r.CommunicationChannels.UnRegiser <- conn
 	return nil
 }
 
+// Broadcast puts msg into the Send channel of each connection
+// and unregisters the connection if the channel isnt available (connection closed)
 func (r Room) Broadcast(msg interface{}) {
 	for _, conn := range r.Connections {
 		select {
@@ -97,6 +111,7 @@ func (r Room) Broadcast(msg interface{}) {
 	}
 }
 
+// listen starts listening on all the CommunicationChannels
 func (r Room) listen() {
 	for {
 		select {

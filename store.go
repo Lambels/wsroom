@@ -31,6 +31,7 @@ type RuntimeStore struct {
 	Rooms map[string]Room
 }
 
+// Get the room with the specific key
 func (s *RuntimeStore) Get(key string) (Room, error) {
 	room, ok := s.Rooms[key]
 	if !ok {
@@ -40,6 +41,7 @@ func (s *RuntimeStore) Get(key string) (Room, error) {
 	return room, nil
 }
 
+// Delete the room with the specific key
 func (s *RuntimeStore) Delete(key string) error {
 	room, ok := s.Rooms[key]
 	if !ok {
@@ -50,6 +52,7 @@ func (s *RuntimeStore) Delete(key string) error {
 	return room.Close()
 }
 
+// Create a room with the set key
 func (s *RuntimeStore) New(key string, maxMessageSize int64) (Room, error) {
 	if room, ok := s.Rooms[key]; ok {
 		return room, ErrRoomAlreadyExists
