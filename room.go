@@ -21,7 +21,7 @@ var (
 // NewRoom is a helper function to create a Room using the default values.
 //
 // Starts listening on the room
-func NewRoom(key string, maxMessageSize int64) Room {
+func NewRoom(key string, maxMessageSize int64, closePeriod time.Duration) Room {
 	r := Room {
 		Key: 						key,	
 		Connections: 				make(map[string]Connection),
@@ -29,6 +29,7 @@ func NewRoom(key string, maxMessageSize int64) Room {
 		WriteWait: 					RegularWriteWait,
 		PongWait: 					RegularPongWait,
 		MaxMessageSize: 			maxMessageSize,
+		ClosePeriod: 				closePeriod,
 		CommunicationChannels: 		CommunicationChannels{
 			Broadcast: 		make(chan interface{}),
 			Register: 		make(chan Connection),
@@ -58,26 +59,38 @@ type Room struct {
 	// The time allowed to read the next pong message
 	PongWait		time.Duration
 
+	ClosePeriod		time.Duration
+
 	// Maximum message size allowed
 	MaxMessageSize	int64
+
+	close			chan bool
 
 	// The communication channels of the room
 	CommunicationChannels
 }
 
-// Close closes all the live connections to the room 
 func (r Room) Close() (error) {
+	r.CloseConnections()
+	r.close <- true
+	return nil
+}
+
+// Close closes all the live connections to the room
+func (r Room) CloseConnections() {
 	for _, conn := range r.Connections {
 		close(conn.Send)
 	}
-
-	return nil
 }
 
 // Subscribe registers conn to the room called upon
 func (r Room) Subscribe(conn Connection) (error) {
 	if _, ok := r.Connections[conn.Key]; ok {
 		return ErrConnAlreadyExists
+	}
+
+	if len(r.close) != 0 {
+		go r.listen()
 	}
 
 	conn.room = r
@@ -113,6 +126,11 @@ func (r Room) Broadcast(msg interface{}) {
 
 // listen starts listening on all the CommunicationChannels
 func (r Room) listen() {
+	ticker := time.NewTicker(r.ClosePeriod)
+	defer ticker.Stop()
+
+	r.close = make(chan bool)
+
 	for {
 		select {
 		case conn := <-r.CommunicationChannels.Register:
@@ -125,6 +143,15 @@ func (r Room) listen() {
 		
 		case msg := <-r.CommunicationChannels.Broadcast:
 			r.Broadcast(msg)
+
+		case <-ticker.C:
+			if len(r.Connections) == 0 {
+				return
+			}
+
+		case <-r.close:
+			r.CloseConnections()
+			return
 		}
 	}
 }
