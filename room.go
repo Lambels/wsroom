@@ -127,7 +127,7 @@ func (r Room) Broadcast(msg interface{}) {
 // listen starts listening on all the CommunicationChannels
 func (r Room) listen() {
 	ticker := time.NewTicker(r.ClosePeriod)
-	defer ticker.Stop()
+	defer func(){ ticker.Stop(); r.close<-true }()
 
 	r.close = make(chan bool)
 
