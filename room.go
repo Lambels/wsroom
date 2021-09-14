@@ -129,7 +129,7 @@ func (r Room) listen() {
 	ticker := time.NewTicker(r.ClosePeriod)
 	defer func(){ ticker.Stop(); r.close<-true }()
 
-	r.close = make(chan bool)
+	r.close = make(chan bool, 1)
 
 	for {
 		select {
