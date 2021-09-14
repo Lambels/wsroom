@@ -2,6 +2,7 @@ package wsroom
 
 import (
 	"errors"
+	"time"
 )
 
 var (
@@ -16,7 +17,7 @@ type Store interface {
 
 	Delete(key string) error
 
-	New(key string, maxMessageSize int64) (Room, error)
+	New(key string, maxMessageSize int64, closePeriod time.Duration) (Room, error)
 }
 
 // RuntimeStore ----------------------------------------------------------------
@@ -53,12 +54,12 @@ func (s *RuntimeStore) Delete(key string) error {
 }
 
 // Create a room with the set key
-func (s *RuntimeStore) New(key string, maxMessageSize int64) (Room, error) {
+func (s *RuntimeStore) New(key string, maxMessageSize int64, closePeriod time.Duration) (Room, error) {
 	if room, ok := s.Rooms[key]; ok {
 		return room, ErrRoomAlreadyExists
 	}
 
-	room := NewRoom(key, maxMessageSize)
+	room := NewRoom(key, maxMessageSize, closePeriod)
 	s.Rooms[key] = room
 
 	return room, nil
