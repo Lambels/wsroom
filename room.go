@@ -36,7 +36,6 @@ func NewRoom(key string, maxMessageSize int64, closePeriod time.Duration) Room {
 			UnRegiser: 		make(chan Connection),
 		},
 	}
-	go r.listen()
 
 	return r
 }
@@ -66,12 +65,13 @@ type Room struct {
 
 	close			chan bool
 
+	isListening		bool
+
 	// The communication channels of the room
 	CommunicationChannels
 }
 
 func (r Room) Close() (error) {
-	r.CloseConnections()
 	r.close <- true
 	return nil
 }
@@ -89,7 +89,7 @@ func (r Room) Subscribe(conn Connection) (error) {
 		return ErrConnAlreadyExists
 	}
 
-	if len(r.close) != 0 {
+	if !r.isListening {
 		go r.listen()
 	}
 
@@ -127,9 +127,10 @@ func (r Room) Broadcast(msg interface{}) {
 // listen starts listening on all the CommunicationChannels
 func (r Room) listen() {
 	ticker := time.NewTicker(r.ClosePeriod)
-	defer func(){ ticker.Stop(); r.close<-true }()
+	defer func(){ ticker.Stop(); r.isListening = false }()
 
 	r.close = make(chan bool, 1)
+	r.isListening = true
 
 	for {
 		select {
