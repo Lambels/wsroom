@@ -30,6 +30,7 @@ func NewRoom(key string, maxMessageSize int64, closePeriod time.Duration) Room {
 		PongWait: 					RegularPongWait,
 		MaxMessageSize: 			maxMessageSize,
 		ClosePeriod: 				closePeriod,
+		isListening: 				false,
 		CommunicationChannels: 		CommunicationChannels{
 			Broadcast: 		make(chan interface{}),
 			Register: 		make(chan Connection),
