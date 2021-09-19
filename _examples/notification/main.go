@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/Lambels/wsroom"
 	"github.com/google/uuid"
@@ -23,7 +24,7 @@ func init() {
 
 func main() {
 	// create the notifications room
-	_, err := store.New("notifications", wsroom.RegularMaxMessageSize)
+	_, err := store.New("notifications", wsroom.RegularMaxMessageSize, time.Second * 15)
 	if err != nil {
 		log.Fatal(err)
 	}
