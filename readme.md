@@ -2,7 +2,7 @@
 
 
 [![ Examples        ][examples_img    ]][examples    ]
-[![Version](https://img.shields.io/badge/goversion-1.16.x-blue.svg)](https://golang.org)
+[![Version](https://img.shields.io/badge/goversion-1.17.x-blue.svg)](https://golang.org)
 <a href="https://golang.org"><img src="https://img.shields.io/badge/powered_by-Go-3362c2.svg?style=flat-square" alt="Built with GoLang"></a>
 
 A Golang library for managing websockets.
