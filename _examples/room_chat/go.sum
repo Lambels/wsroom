@@ -14,6 +14,14 @@ github.com/Lambels/wsroom v1.0.1-0.20210912082529-dd8822c9be04 h1:q8cyf2i4v0r4/a
 github.com/Lambels/wsroom v1.0.1-0.20210912082529-dd8822c9be04/go.mod h1:+L+vheXhzD+j/AaGcPZrlD7XZY/HWxva2jSw8CqPEIc=
 github.com/Lambels/wsroom v1.0.1-0.20210913144123-c1d8e113d063 h1:Z/wk0vNeCY1ATPgxIexVBD/Q0knIQrwz2Xcdfwgzg+g=
 github.com/Lambels/wsroom v1.0.1-0.20210913144123-c1d8e113d063/go.mod h1:+L+vheXhzD+j/AaGcPZrlD7XZY/HWxva2jSw8CqPEIc=
+github.com/Lambels/wsroom v1.0.2-0.20210914161135-26550470237d h1:6Twe3RnkSsFeJxTUFySushsc2q2aOgPp8Pm4iGqcfqA=
+github.com/Lambels/wsroom v1.0.2-0.20210914161135-26550470237d/go.mod h1:+L+vheXhzD+j/AaGcPZrlD7XZY/HWxva2jSw8CqPEIc=
+github.com/Lambels/wsroom v1.0.2-0.20210914181352-414f0266207d h1:WFwPMTb/8ClBKqpL4DOxQyHhtv04oTfL/TbLkgggGG0=
+github.com/Lambels/wsroom v1.0.2-0.20210914181352-414f0266207d/go.mod h1:+L+vheXhzD+j/AaGcPZrlD7XZY/HWxva2jSw8CqPEIc=
+github.com/Lambels/wsroom v1.0.2-0.20210916084950-116d15e82c9c h1:BTgcxKSpNGyn8D2Vrq2S1Y97ONQWHSutZ1qA70isNlM=
+github.com/Lambels/wsroom v1.0.2-0.20210916084950-116d15e82c9c/go.mod h1:+L+vheXhzD+j/AaGcPZrlD7XZY/HWxva2jSw8CqPEIc=
+github.com/Lambels/wsroom v1.0.2-0.20210919070729-bcad2d1e4710 h1:fkSLZxSPQVKkG45ghrCUKqnvLcB1i62EQdvVG9jg5sI=
+github.com/Lambels/wsroom v1.0.2-0.20210919070729-bcad2d1e4710/go.mod h1:+L+vheXhzD+j/AaGcPZrlD7XZY/HWxva2jSw8CqPEIc=
 github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
 github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
 github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=

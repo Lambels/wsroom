@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/Lambels/wsroom"
 	"github.com/google/uuid"
@@ -35,7 +36,7 @@ func CreateRoom(w http.ResponseWriter, r *http.Request) {
 		roomKey := r.FormValue("roomKey")
 		
 		// create a new room with the given roomKey
-		_, err := store.New(roomKey, wsroom.RegularMaxMessageSize)
+		_, err := store.New(roomKey, wsroom.RegularMaxMessageSize, time.Second * 15)	// closePeriod should be much bigger but time.Second * 5 is used for demonstration purposes
 		// room already exists?
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
