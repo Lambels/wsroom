@@ -19,8 +19,6 @@ var (
 )
 
 // NewRoom is a helper function to create a Room using the default values.
-//
-// Starts listening on the room
 func NewRoom(key string, maxMessageSize int64, closePeriod time.Duration) Room {
 	r := Room {
 		Key: 						key,	
