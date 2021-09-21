@@ -80,7 +80,7 @@ func NewSQLStore(driverName, dsn, tableName string) (Store, error) {
 		roomKey VARCHAR(100) NOT NULL,
 		max_message_size INT,
 		close_period INT,
-		PRIMARY KEY("roomKey"))`, tableName)
+		PRIMARY KEY(roomKey))`, tableName)
 
 	if _, err := db.Exec(createTQ); err != nil {	// statement will no-op if table already exists
 		return nil, err
