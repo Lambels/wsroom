@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"time"
+
+	"github.com/go-sql-driver/mysql"
 )
 
 var (
@@ -182,7 +184,16 @@ func (s *SQLStore) New(key string, maxMessageSize int64, closePeriod time.Durati
 	}
 
 	_, err := s.insertStmt.Exec(key, maxMessageSize, closePeriod)
-	if err != nil {
+	switch err := err.(type) {
+	case *mysql.MySQLError:
+		if err.Number == 1062 {
+			break
+		}
+		return room, err
+
+	case nil:
+
+	default:
 		return room, err
 	}
 
