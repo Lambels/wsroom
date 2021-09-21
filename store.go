@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/go-sql-driver/mysql"
@@ -150,9 +151,17 @@ func (s *SQLStore) Get(key string) (Room, error) {
 		return room, err
 	}
 
-	if err := rows.Scan(&col.roomKey, &col.maxMessageSize, &col.closePeriod); err != nil {
-		return room, err
+	for rows.Next() {
+		if err := rows.Scan(&col.roomKey, &col.maxMessageSize, &col.closePeriod); err != nil {
+			return room, err
+		}
+		log.Println(col.closePeriod)
+
+		if err = rows.Err(); err != nil {
+			return room, err
+		}
 	}
+
 
 	r := NewRoom(key, col.maxMessageSize, col.closePeriod)
 	s.rooms[key] = r
