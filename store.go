@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/go-sql-driver/mysql"
@@ -155,7 +154,6 @@ func (s *SQLStore) Get(key string) (Room, error) {
 		if err := rows.Scan(&col.roomKey, &col.maxMessageSize, &col.closePeriod); err != nil {
 			return room, err
 		}
-		log.Println(col.closePeriod)
 
 		if err = rows.Err(); err != nil {
 			return room, err
