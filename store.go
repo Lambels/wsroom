@@ -4,40 +4,54 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/go-sql-driver/mysql"
 )
 
 var (
-	ErrRoomNotFound = errors.New("room not found")
+	ErrRoomNotFound      = errors.New("room not found")
 	ErrRoomAlreadyExists = errors.New("room already exists")
+	colPool              = sync.Pool{
+		New: func() interface{} {
+			return new(roomColumn)
+		},
+	}
 )
 
 // Store ----------------------------------------------------------------------
 
 type Store interface {
-	Get(key string) (Room, error)
+	Get(key string) (*Room, error)
 
 	Delete(key string) error
 
-	New(key string, maxMessageSize int64, closePeriod time.Duration) (Room, error)
+	New(key string, maxMessageSize int64, closePeriod time.Duration) (*Room, error)
 }
 
 // RuntimeStore ---------------------------------------------------------------
 
 func NewRuntimeStore() Store {
-	return &RuntimeStore {
-		Rooms: make(map[string]Room),
+	return &RuntimeStore{
+		roomPool: sync.Pool{
+			New: func() interface{} {
+				return new(Room)
+			},
+		},
+
+		channelStore: make(map[string]CommunicationChannels),
 	}
 }
 
 type RuntimeStore struct {
-	Rooms map[string]Room
+	roomPool sync.Pool
+
+	channelStore map[string]CommunicationChannels
 }
 
 // Get the room with the specific key
-func (s *RuntimeStore) Get(key string) (Room, error) {
+func (s *RuntimeStore) Get(key string) (*Room, error) {
 	room, ok := s.Rooms[key]
 	if !ok {
 		return room, ErrRoomNotFound
@@ -58,7 +72,7 @@ func (s *RuntimeStore) Delete(key string) error {
 }
 
 // Create a room with the set key
-func (s *RuntimeStore) New(key string, maxMessageSize int64, closePeriod time.Duration) (Room, error) {
+func (s *RuntimeStore) New(key string, maxMessageSize int64, closePeriod time.Duration) (*Room, error) {
 	if room, ok := s.Rooms[key]; ok {
 		return room, ErrRoomAlreadyExists
 	}
@@ -77,14 +91,14 @@ func NewSQLStore(driverName, dsn, tableName string) (Store, error) {
 		return nil, err
 	}
 
-	createTQ := fmt.Sprintf (
+	createTQ := fmt.Sprintf(
 		`CREATE TABLE IF NOT EXISTS %s (
 		roomKey VARCHAR(100) NOT NULL,
 		max_message_size INT,
 		close_period INT,
 		PRIMARY KEY(roomKey))`, tableName)
 
-	if _, err := db.Exec(createTQ); err != nil {	// statement will no-op if table already exists
+	if _, err := db.Exec(createTQ); err != nil { // statement will no-op if table already exists
 		return nil, err
 	}
 
@@ -106,34 +120,35 @@ func NewSQLStore(driverName, dsn, tableName string) (Store, error) {
 		return nil, err
 	}
 
-	return &SQLStore {
-		db: 			db,
-		insertStmt: 	insertStmt,
-		deleteStmt: 	deleteStmt,
-		selectStmt: 	selectStmt,
-		rooms: 	make(map[string]Room),
+	return &SQLStore{
+		db:         db,
+		insertStmt: insertStmt,
+		deleteStmt: deleteStmt,
+		selectStmt: selectStmt,
+		rooms:      make(map[string]*Room),
 	}, nil
 }
 
 type SQLStore struct {
-	db 			*sql.DB
+	db *sql.DB
 
-	insertStmt 	*sql.Stmt
-	deleteStmt	*sql.Stmt
-	selectStmt	*sql.Stmt
+	insertStmt *sql.Stmt
+	deleteStmt *sql.Stmt
+	selectStmt *sql.Stmt
 
-	rooms	map[string]Room
+	rooms map[string]*Room
 }
 
 type roomColumn struct {
-	roomKey				string
-	maxMessageSize		int64
-	closePeriod			time.Duration
+	roomKey        string
+	maxMessageSize int64
+	closePeriod    time.Duration
 }
 
-func (s *SQLStore) Get(key string) (Room, error) {
-	var room 	Room
-	var col 	roomColumn
+func (s *SQLStore) Get(key string) (*Room, error) {
+	var room *Room
+	var col = colPool.Get().(*roomColumn)
+	defer colPool.Put(coly)
 
 	if room, ok := s.rooms[key]; ok {
 		return room, nil
@@ -151,7 +166,7 @@ func (s *SQLStore) Get(key string) (Room, error) {
 	}
 
 	for rows.Next() {
-		if err := rows.Scan(&col.roomKey, &col.maxMessageSize, &col.closePeriod); err != nil {
+		if err := rows.Scan(col.roomKey, col.maxMessageSize, col.closePeriod); err != nil {
 			return room, err
 		}
 
@@ -160,12 +175,11 @@ func (s *SQLStore) Get(key string) (Room, error) {
 		}
 	}
 
-
 	r := NewRoom(key, col.maxMessageSize, col.closePeriod)
 	s.rooms[key] = r
 
 	return r, nil
-} 
+}
 
 func (s *SQLStore) Delete(key string) error {
 	var closeErr error
@@ -183,8 +197,8 @@ func (s *SQLStore) Delete(key string) error {
 	return closeErr
 }
 
-func (s *SQLStore) New(key string, maxMessageSize int64, closePeriod time.Duration) (Room, error) {
-	var room Room
+func (s *SQLStore) New(key string, maxMessageSize int64, closePeriod time.Duration) (*Room, error) {
+	var room *Room
 
 	if room, ok := s.rooms[key]; ok {
 		return room, ErrRoomAlreadyExists
